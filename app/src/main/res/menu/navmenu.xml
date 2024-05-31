@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-  
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home"
+        android:title="Home"  />
+    <item
+        android:id="@+id/consult"
+        android:icon="@drawable/ic_consult"
+        android:title="Consult" />
+    <item
+        android:id="@+id/community"
+        android:icon="@drawable/icon"
+        android:title="Community"
+        />
+    <item
+        android:id="@+id/journal"
+        android:icon="@drawable/icon"
+        android:title="Journal"
+        />
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/icon"
+        android:title="Profile"
+        />
 </menu>
