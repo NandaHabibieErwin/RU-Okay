@@ -6,6 +6,16 @@
     <item name="colorPrimary">@color/primary_500</item>
         <item name="buttonTint">@color/primary_500</item>
     </style>
+    <style name="BottomNavigationViewTextActive" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/primary_500</item>
+        <!-- You can add other text appearance attributes like textSize, fontFamily, etc. -->
+    </style>
+
+    <!-- Define the inactive item text appearance style -->
+    <style name="BottomNavigationViewTextInactive" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/neutral_400</item>
+        <!-- You can add other text appearance attributes like textSize, fontFamily, etc. -->
+    </style>
 
     <style name="Theme.RUOkay" parent="Base.Theme.RUOkay" />
 </resources>

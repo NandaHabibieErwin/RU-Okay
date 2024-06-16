@@ -23,8 +23,13 @@
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0."
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/navmenu"
+        app:itemTextAppearanceActive="@style/BottomNavigationViewTextActive"
+        app:itemTextAppearanceInactive="@style/BottomNavigationViewTextInactive"
+        app:itemIconSize="39dp"
+        app:itemPaddingTop="4dp"
+        app:itemPaddingBottom="4dp"
         android:scrollIndicators="left"/>
 </RelativeLayout>
