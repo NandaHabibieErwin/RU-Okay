@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "88750609294",
+    "firebase_url": "https://ru-okaydemo-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "ru-okaydemo",
+    "storage_bucket": "ru-okaydemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88750609294:android:a4d9f7bf2bfdea17c94adf",
+        "android_client_info": {
+          "package_name": "com.blackjack.ru_okay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "88750609294-vmn62h97fk7fov7j9vfmdgtgv7b88jdk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE-d5m_5Yug-zsaRh9_aCMT624puQ7G08"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "88750609294-vmn62h97fk7fov7j9vfmdgtgv7b88jdk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
