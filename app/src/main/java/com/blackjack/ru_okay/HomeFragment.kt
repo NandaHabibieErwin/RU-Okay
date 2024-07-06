@@ -10,13 +10,29 @@ import android.widget.TextView
 import android.widget.ViewFlipper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
 
 class HomeFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
+
+    companion object {
+        private const val ARG_USER_ID = "user_id"
+
+        fun newInstance(userId: String): HomeFragment {
+            val fragment = HomeFragment()
+            val args = Bundle().apply {
+                putString(ARG_USER_ID, userId)
+            }
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance("https://ru-okaydemo-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
     }
 
     override fun onCreateView(
@@ -39,21 +55,30 @@ class HomeFragment : Fragment() {
             viewFlipper.showPrevious()
         }
 
-        // Get current user and display email
-        val currentUser = auth.currentUser
-        displayUserEmail(view, currentUser)
+        // Get current user and display username
+        val userId = arguments?.getString(ARG_USER_ID)
+        displayUsername(view, userId)
 
         return view
     }
 
-    private fun displayUserEmail(view: View, user: FirebaseUser?) {
-        val emailTextView: TextView = view.findViewById(R.id.greeting_text)
-        user?.let {
-            val email = it.email
-            emailTextView.text = email
+    private fun displayUsername(view: View, userId: String?) {
+        val usernameTextView: TextView = view.findViewById(R.id.greeting_text)
+        userId?.let {
+            // Fetch username from Realtime Database
+            database.child("users").child(it).child("username").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val username = snapshot.value as? String
+                    usernameTextView.text = username ?: "Username not found"
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    usernameTextView.text = "Failed to load username"
+                }
+            })
         } ?: run {
-            // No user is signed in
-            emailTextView.text = "No user is signed in"
+            // No user ID provided
+            usernameTextView.text = "No user ID provided"
         }
     }
 }

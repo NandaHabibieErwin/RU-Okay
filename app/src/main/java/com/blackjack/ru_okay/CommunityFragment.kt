@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.sendbird.uikit.fragments.ChannelListFragment
 
+
 class CommunityFragment : ChannelListFragment() {
 
 }

@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import androidx.activity.enableEdgeToEdge
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.sendbird.android.exception.SendbirdException
 import com.sendbird.android.handler.InitResultHandler
 import com.sendbird.uikit.SendbirdUIKit
@@ -18,7 +19,8 @@ import com.sendbird.uikit.adapter.SendbirdUIKitAdapter
 import com.sendbird.uikit.interfaces.UserInfo
 
 class LoginActivity : AppCompatActivity() {
-    val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,19 +32,25 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
+        // Initialize the database reference
+        database = FirebaseDatabase.getInstance("https://ru-okaydemo-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
+
         val loginButton = findViewById<Button>(R.id.btnLogin)
         loginButton.setOnClickListener {
-            val emailEditText = findViewById<EditText>(R.id.loginEmail)  // Replace with your email EditText id
-            val passwordEditText = findViewById<EditText>(R.id.loginPassword)  // Replace with your password EditText id
+            val emailEditText = findViewById<EditText>(R.id.loginEmail)
+            val passwordEditText = findViewById<EditText>(R.id.loginPassword)
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
-            loginUser(email, password)
-            val emailCleaned = email.substringBefore("@", "")
-            initializeSendBird(emailCleaned)
+
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                loginUser(email, password)
+            } else {
+                Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun initializeSendBird(username : String){
+    private fun initializeSendBird(uid: String, username: String) {
         SendbirdUIKit.init(object : SendbirdUIKitAdapter {
             override fun getAppId(): String {
                 return "9679B48B-9707-4DFA-83E3-D4915E396D50" // Specify your Sendbird application ID.
@@ -55,14 +63,15 @@ class LoginActivity : AppCompatActivity() {
             override fun getUserInfo(): UserInfo {
                 return object : UserInfo {
                     override fun getUserId(): String {
-                        val x = "dinosaurus"
+                        val x = uid
+                        Log.d("SendBird", "UserId: $uid")
                         return x
-                        // Use the ID of a user you've created on the dashboard.
-                        // If there isn't one, specify a unique ID so that a new user can be created with the value.
                     }
 
                     override fun getNickname(): String {
-                        return "Blackjack Colver" // Specify your user nickname. Optional.
+                        val r = username
+                        Log.d("SendBird", "Username: $username")
+                        return r
                     }
 
                     override fun getProfileUrl(): String {
@@ -78,15 +87,11 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     override fun onInitFailed(e: SendbirdException) {
-                        // If DB migration fails, this method is called.
+                        Log.e("SendBird", "Initialization failed: ${e.message}")
                     }
 
                     override fun onInitSucceed() {
-                        // If DB migration is successful, this method is called and you can proceed to the next step.
-                        // In the sample app, the `LiveData` class notifies you on the initialization progress
-                        // And observes the `MutableLiveData<InitState> initState` value in `SplashActivity()`.
-                        // If successful, the `LoginActivity` screen
-                        // Or the `HomeActivity` screen will show.
+                        Log.d("SendBird", "Initialization succeeded")
                     }
                 }
             }
@@ -97,17 +102,34 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Login successful
                     val user = auth.currentUser
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    val userId = user?.uid ?: ""
+                    fetchUserData(userId)
                 } else {
-                    // Login failed
                     Log.w("Login", "signInWithEmail:failure", task.exception)
+                    Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
+    private fun fetchUserData(userId: String) {
+        database.child("users").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userMap = snapshot.value as? Map<*, *>
+                val username = userMap?.get("username") as? String ?: ""
 
+                Log.d("Login", "Fetched username: $username")
+                initializeSendBird(userId, username)
+
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("Login", "Failed to read user data", error.toException())
+                Toast.makeText(this@LoginActivity, "Failed to read user data", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 }
