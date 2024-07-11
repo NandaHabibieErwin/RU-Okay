@@ -12,7 +12,13 @@
     <color name="primary_600">#20AF6A</color>
     <color name="primary_700">#20AF6A</color>
     <color name="primary_800">#0E7658</color>
-    <color name="primary_900">#086151</color>
+
+    <!-- Button Color -->
+    <color name="danger_600">#DC3024</color>
+
+    <!-- Button Color -->
+    <color name="active">#2DCC6F</color>
+    <color name="inactive">#B0B1B5</color>
 
     <!-- Neutral Color -->
     <color name="neutral_100">#F4F4F4</color>

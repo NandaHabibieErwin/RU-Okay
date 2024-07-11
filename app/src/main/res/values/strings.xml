@@ -43,4 +43,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sb_text_channel_list_title_unknown">Anonymous</string>
+    <string name="community">Community</string>
+    <string name="home">Home</string>
+    <string name="consult">Consult</string>
+    <string name="journal">Journal</string>
+    <string name="profile">Profile</string>
+    <string name="my_subscription">My Subscription</string>
+    <string name="edit_user_profile">Edit User Profile</string>
 </resources>

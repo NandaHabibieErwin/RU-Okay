@@ -30,14 +30,12 @@ class LandingActivity : AppCompatActivity() {
             loginButton.setOnClickListener {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
-                finish()
             }
 
         val registerButton = findViewById<Button>(R.id.signup)
         registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
-            finish()
         }
 
 

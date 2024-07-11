@@ -5,6 +5,11 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.blackjack.ru_okay.databinding.ActivityMainBinding
+import com.blackjack.ru_okay.fragments.CommunityFragment
+import com.blackjack.ru_okay.fragments.ConsultFragment
+import com.blackjack.ru_okay.fragments.HomeFragment
+import com.blackjack.ru_okay.fragments.JournalFragment
+import com.blackjack.ru_okay.fragments.SettingFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,7 +29,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance("https://ru-okaydemo-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
         val currentUser = auth.currentUser
@@ -60,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.profile -> {
-                    loadFragment(ProfileFragment())
+                    loadFragment(SettingFragment())
                     true
                 }
                 else -> false
@@ -69,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun retrieveUsernameAndInitializeSendbird(userID: String) {
-        database.child("users").child(userID).child("username").addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("users").child(userID).child("profile").child("username").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val username = snapshot.value as? String ?: "default_username"
                 initSendbird(userID, username)

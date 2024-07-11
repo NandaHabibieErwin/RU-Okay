@@ -118,6 +118,7 @@ class RegisterActivity : AppCompatActivity() {
                                 Log.d("Registration", "User data saved successfully")
                                 initializeSendBird(userId, username)
                                 val intent = Intent(this, MainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)
                                 finish()
                             } else {

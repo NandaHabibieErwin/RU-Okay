@@ -4,24 +4,24 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/ic_home"
-        android:title="Home"  />
+        android:title="@string/home"  />
     <item
         android:id="@+id/consult"
         android:icon="@drawable/ic_consult"
-        android:title="Consult" />
+        android:title="@string/consult" />
     <item
         android:id="@+id/community"
-        android:icon="@drawable/icon"
-        android:title="Community"
+        android:icon="@drawable/ic_community"
+        android:title="@string/community"
         />
     <item
         android:id="@+id/journal"
-        android:icon="@drawable/icon"
-        android:title="Journal"
+        android:icon="@drawable/ic_journals"
+        android:title="@string/journal"
         />
     <item
         android:id="@+id/profile"
-        android:icon="@drawable/icon"
-        android:title="Profile"
+        android:icon="@drawable/ic_user"
+        android:title="@string/profile"
         />
 </menu>
