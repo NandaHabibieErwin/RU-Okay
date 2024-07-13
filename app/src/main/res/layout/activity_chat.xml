@@ -5,13 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".journal.WriteJournalActivity">
-    <EditText
-        android:id="@+id/writeJournalEditText"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:hint="Start writing..."
-        android:gravity="top"
-        android:padding="16dp" />
+    tools:context=".consult.ChatActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

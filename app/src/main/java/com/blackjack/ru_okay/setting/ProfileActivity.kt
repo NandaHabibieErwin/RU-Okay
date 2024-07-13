@@ -1,4 +1,4 @@
-package com.blackjack.ru_okay
+package com.blackjack.ru_okay.setting
 
 import android.app.Activity
 import android.content.Intent
@@ -6,12 +6,17 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.blackjack.ru_okay.R
 import com.blackjack.ru_okay.databinding.ActivityProfileBinding
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import com.sendbird.android.handler.CompletionHandler
+import com.sendbird.android.params.UserUpdateParams
+import com.sendbird.uikit.SendbirdUIKit
 import java.io.IOException
 
 class ProfileActivity : AppCompatActivity() {
@@ -87,8 +92,20 @@ class ProfileActivity : AppCompatActivity() {
         )
         database.child("users").child(userId).child("profile").setValue(userProfile)
             .addOnSuccessListener {
-                // Profile saved successfully
-                finish() // Navigate back to the previous activity
+                val username = userProfile["username"].toString()
+                val params = UserUpdateParams()
+                params.nickname = username
+
+                SendbirdUIKit.updateUserInfo(params, CompletionHandler { e ->
+                    if (e != null) {
+                        Log.e("Sendbird", "Failed to update user info: ${e.message}")
+                        // Handle error, show toast or alert
+                    } else {
+                        Log.d("Sendbird", "User info updated successfully")
+                        finish()
+                    }
+                })
+                 // Navigate back to the previous activity
             }
             .addOnFailureListener {
                 // Failed to save profile

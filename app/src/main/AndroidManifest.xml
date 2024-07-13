@@ -28,28 +28,49 @@
         android:theme="@style/Theme.RUOkay"
         tools:targetApi="31">
         <activity
-            android:name=".JournalInfoActivity"
+            android:name=".moodtracker.WeeklyMoodSummaryActivity"
             android:exported="false" />
         <activity
-            android:name=".WriteJournalActivity"
+            android:name=".moodtracker.EmotionSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".moodtracker.MoodDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".consult.CallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".consult.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".payment.PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".consult.ConsultPsychologListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".journal.JournalInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".journal.WriteJournalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".setting.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".auth.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
-            android:name=".LandingActivity"
+            android:name=".auth.LandingActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".auth.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>

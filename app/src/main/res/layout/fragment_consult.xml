@@ -1,10 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragments.ConsultFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Top Section -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/bg_consult">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/greetingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Hellfo Bagas,\nTell me if you need me!"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <!-- Counseling Services Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/primary_400"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/counselingServicesTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Counseling Services"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:id="@+id/chatCallService"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_chat_call"
+                android:contentDescription="Chat/Call" />
+
+            <ImageView
+                android:id="@+id/faceToFaceService"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_face"
+                android:contentDescription="Face to Face"
+                android:layout_marginStart="16dp" />
+
+            <ImageView
+                android:id="@+id/familyCounselingService"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_family_counseling"
+                android:contentDescription="Family Counseling"
+                android:layout_marginStart="16dp" />
+        </LinearLayout>
+
+        <!-- Add other counseling steps and buttons here -->
+    </LinearLayout>
+
+    <!-- Best rated psychologist section -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/bestRatingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Psychologist with the best rating"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bestRatingTitle"
+            android:layout_marginTop="16dp" />
+    </RelativeLayout>
+</LinearLayout>

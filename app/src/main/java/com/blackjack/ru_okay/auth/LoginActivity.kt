@@ -1,4 +1,4 @@
-package com.blackjack.ru_okay
+package com.blackjack.ru_okay.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.blackjack.ru_okay.MainActivity
+import com.blackjack.ru_okay.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sendbird.android.exception.SendbirdException

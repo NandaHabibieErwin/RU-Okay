@@ -1,4 +1,4 @@
-package com.blackjack.ru_okay
+package com.blackjack.ru_okay.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.blackjack.ru_okay.MainActivity
+import com.blackjack.ru_okay.R
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -15,8 +17,7 @@ class LandingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (auth.currentUser != null){
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            redirectToMain()
         }
         enableEdgeToEdge()
         setContentView(R.layout.activity_landing)
@@ -39,5 +40,10 @@ class LandingActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun redirectToMain(){
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 }

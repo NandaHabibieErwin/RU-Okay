@@ -1,4 +1,4 @@
-    package com.blackjack.ru_okay
+    package com.blackjack.ru_okay.journal
 
     import android.os.Bundle
     import android.view.Menu
@@ -9,11 +9,11 @@
     import androidx.appcompat.app.AppCompatActivity
     import androidx.core.view.ViewCompat
     import androidx.core.view.WindowInsetsCompat
+    import com.blackjack.ru_okay.R
     import com.blackjack.ru_okay.databinding.ActivityWriteJournalBinding
     import com.google.firebase.auth.FirebaseAuth
     import com.google.firebase.database.DatabaseReference
     import com.google.firebase.database.FirebaseDatabase
-    import com.google.firebase.vertexai.type.content
 
     class WriteJournalActivity : AppCompatActivity() {
 

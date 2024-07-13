@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.blackjack.ru_okay.JournalInfoActivity
+import com.blackjack.ru_okay.journal.JournalInfoActivity
 import com.blackjack.ru_okay.R
-import com.blackjack.ru_okay.WriteJournalActivity
+import com.blackjack.ru_okay.journal.WriteJournalActivity
 import com.blackjack.ru_okay.databinding.FragmentJournalBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*

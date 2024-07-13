@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.blackjack.ru_okay.LandingActivity
-import com.blackjack.ru_okay.ProfileActivity
+import com.blackjack.ru_okay.auth.LandingActivity
+import com.blackjack.ru_okay.setting.ProfileActivity
 import com.blackjack.ru_okay.R
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth

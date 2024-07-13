@@ -1,12 +1,11 @@
-package com.blackjack.ru_okay
+package com.blackjack.ru_okay.auth
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.view.WindowManager
+import com.blackjack.ru_okay.R
 
 class SplashActivity : AppCompatActivity() {
 
