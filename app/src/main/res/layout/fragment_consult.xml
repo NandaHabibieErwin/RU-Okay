@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Hellfo Bagas,\nTell me if you need me!"
+            android:text="Hello Bagas,\nTell me if you need me!"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
     </RelativeLayout>

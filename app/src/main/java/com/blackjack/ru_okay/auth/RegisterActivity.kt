@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.blackjack.ru_okay.MainActivity
+import com.blackjack.ru_okay.PsychologistActivity
 import com.blackjack.ru_okay.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -53,9 +55,12 @@ class RegisterActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
             val username = usernameEditText.text.toString()
             val birthDate = birthDateEditText.text.toString()
+            val isPsychologist = findViewById<RadioButton>(R.id.radioPsychologist).isChecked
 
             if (email.isNotEmpty() && password.isNotEmpty() && username.isNotEmpty() && birthDate.isNotEmpty()) {
-                registerUser(email, password, username, birthDate)
+                registerUser(email, password, username, birthDate, isPsychologist)
+            } else {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -63,11 +68,11 @@ class RegisterActivity : AppCompatActivity() {
     private fun initializeSendBird(id: String, username: String) {
         SendbirdUIKit.init(object : SendbirdUIKitAdapter {
             override fun getAppId(): String {
-                return "9679B48B-9707-4DFA-83E3-D4915E396D50" // Specify your Sendbird application ID.
+                return "66356B2B-EEE4-4399-A78B-C38720145059" // Specify your Sendbird application ID.
             }
 
             override fun getAccessToken(): String {
-                return "e8ca03277650b52bda3de01ca6e56862909e9c42"
+                return ""
             }
 
             override fun getUserInfo(): UserInfo {
@@ -100,25 +105,35 @@ class RegisterActivity : AppCompatActivity() {
         }, this)
     }
 
-    private fun registerUser(email: String, password: String, username: String, birthDate: String) {
+    private fun registerUser(email: String, password: String, username: String, birthDate: String, isPsychologist: Boolean) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { authTask ->
                 if (authTask.isSuccessful) {
                     val user = auth.currentUser
                     val userId = user?.uid ?: ""
-                    val userEmail = user?.email ?: ""
                     val userMap = mapOf(
                         "email" to email,
                         "username" to username,
+                        "birthDate" to birthDate
                     )
                     Log.d("Registration", "User registered: $userId")
 
-                    database.child("users").child(userId).setValue(userMap)
+                    val databaseReference = if (isPsychologist) {
+                        database.child("psychologists").child(userId).child("profile")
+                    } else {
+                        database.child("users").child(userId).child("profile")
+                    }
+
+                    databaseReference.setValue(userMap)
                         .addOnCompleteListener { dbTask ->
                             if (dbTask.isSuccessful) {
                                 Log.d("Registration", "User data saved successfully")
                                 initializeSendBird(userId, username)
-                                val intent = Intent(this, MainActivity::class.java)
+                                val intent = if (isPsychologist) {
+                                    Intent(this, PsychologistActivity::class.java)
+                                } else {
+                                    Intent(this, MainActivity::class.java)
+                                }
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)
                                 finish()

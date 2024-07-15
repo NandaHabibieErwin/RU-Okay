@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.blackjack.ru_okay.MainActivity
+import com.blackjack.ru_okay.PsychologistActivity
 import com.blackjack.ru_okay.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -50,16 +51,30 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
             }
         }
+
+        val psychologistLoginButton = findViewById<Button>(R.id.btnPsychologistLogin)
+        psychologistLoginButton.setOnClickListener {
+            val emailEditText = findViewById<EditText>(R.id.loginEmail)
+            val passwordEditText = findViewById<EditText>(R.id.loginPassword)
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
+
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                loginPsychologist(email, password)
+            } else {
+                Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun initializeSendBird(uid: String, username: String) {
         SendbirdUIKit.init(object : SendbirdUIKitAdapter {
             override fun getAppId(): String {
-                return "9679B48B-9707-4DFA-83E3-D4915E396D50" // Specify your Sendbird application ID.
+                return "66356B2B-EEE4-4399-A78B-C38720145059" // Specify your Sendbird application ID.
             }
 
             override fun getAccessToken(): String {
-                return "e8ca03277650b52bda3de01ca6e56862909e9c42"
+                return ""
             }
 
             override fun getUserInfo(): UserInfo {
@@ -114,24 +129,70 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    private fun loginPsychologist(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    val userId = user?.uid ?: ""
+                    fetchPsychologistData(userId)
+                } else {
+                    Log.w("Login", "signInWithEmail:failure", task.exception)
+                    Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
     private fun fetchUserData(userId: String) {
         database.child("users").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val userMap = snapshot.value as? Map<*, *>
-                val username = userMap?.get("username") as? String ?: ""
+                if (snapshot.exists()) {
+                    val userMap = snapshot.value as? Map<*, *>
+                    val username = userMap?.get("username") as? String ?: ""
 
-                Log.d("Login", "Fetched username: $username")
-                initializeSendBird(userId, username)
+                    Log.d("Login", "Fetched username: $username")
+                    initializeSendBird(userId, username)
 
-                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this@LoginActivity, "This account is not a user account.", Toast.LENGTH_SHORT).show()
+                    auth.signOut()
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.w("Login", "Failed to read user data", error.toException())
                 Toast.makeText(this@LoginActivity, "Failed to read user data", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun fetchPsychologistData(userId: String) {
+        database.child("psychologists").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val psychologistMap = snapshot.value as? Map<*, *>
+                    val username = psychologistMap?.get("username") as? String ?: ""
+
+                    Log.d("Login", "Fetched psychologist username: $username")
+                    initializeSendBird(userId, username)
+
+                    val intent = Intent(this@LoginActivity, PsychologistActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this@LoginActivity, "This account is not a psychologist account.", Toast.LENGTH_SHORT).show()
+                    auth.signOut()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("Login", "Failed to read psychologist data", error.toException())
+                Toast.makeText(this@LoginActivity, "Failed to read psychologist data", Toast.LENGTH_SHORT).show()
             }
         })
     }

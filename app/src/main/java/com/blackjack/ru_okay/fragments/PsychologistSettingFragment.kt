@@ -9,19 +9,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.blackjack.ru_okay.auth.LandingActivity
-import com.blackjack.ru_okay.setting.ProfileActivity
+import com.blackjack.ru_okay.setting.PsychologistProfileActivity
 import com.blackjack.ru_okay.R
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
-import com.blackjack.ru_okay.databinding.FragmentSettingBinding
+import com.blackjack.ru_okay.databinding.FragmentPsychologistSettingBinding
 
-class SettingFragment : Fragment() {
+class PsychologistSettingFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var storage: FirebaseStorage
-    private var _binding: FragmentSettingBinding? = null
+    private var _binding: FragmentPsychologistSettingBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,14 +35,14 @@ class SettingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSettingBinding.inflate(inflater, container, false)
+        _binding = FragmentPsychologistSettingBinding.inflate(inflater, container, false)
         val view = binding.root
 
         val userId = auth.currentUser?.uid
 
         userId?.let {
-            // Fetch user info from Realtime Database
-            database.child("users").child(it).child("profile").addListenerForSingleValueEvent(object : ValueEventListener {
+            // Fetch psychologist info from Realtime Database
+            database.child("psychologists").child(it).child("profile").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (_binding == null || !isAdded) return
 
@@ -63,7 +63,7 @@ class SettingFragment : Fragment() {
                     binding.userPhone.text = "Failed to load phone"
 
                     activity?.let {
-                        Toast.makeText(it, "Failed to load user info", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(it, "Failed to load psychologist info", Toast.LENGTH_SHORT).show()
                     }
                 }
             })
@@ -89,13 +89,14 @@ class SettingFragment : Fragment() {
         }
 
         binding.editUserProfile.setOnClickListener {
-            val intent = Intent(activity, ProfileActivity::class.java)
+            val intent = Intent(activity, PsychologistProfileActivity::class.java)
             startActivity(intent)
         }
 
         binding.btnLogout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
-            val intent = Intent(activity, LandingActivity::class.java)
+            val intent = Intent(requireContext(), LandingActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
 

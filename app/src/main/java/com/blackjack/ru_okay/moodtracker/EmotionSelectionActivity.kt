@@ -69,8 +69,10 @@ class EmotionSelectionActivity : AppCompatActivity() {
         binding = ActivityEmotionSelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         database = FirebaseDatabase.getInstance().reference
         val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val initialMood = intent.getStringExtra("selectedEmotion") ?: "Neutral"
 
         setupEmotionGrid(binding.positiveEmotionGrid, emotionMap.filterValues { it == "Positive" }.keys, selectedPositiveEmotions)
         setupEmotionGrid(binding.negativeEmotionGrid, emotionMap.filterValues { it == "Negative" }.keys, selectedNegativeEmotions)
@@ -81,6 +83,7 @@ class EmotionSelectionActivity : AppCompatActivity() {
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             val moodKey = "$dayOfWeek-$currentDate"
             val moodData = mapOf(
+                "mood" to initialMood,
                 "positive" to selectedPositiveEmotions,
                 "negative" to selectedNegativeEmotions,
                 "factor" to selectedFactors

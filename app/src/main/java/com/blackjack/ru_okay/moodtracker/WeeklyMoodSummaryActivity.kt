@@ -3,7 +3,7 @@ package com.blackjack.ru_okay.moodtracker
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.blackjack.ru_okay.MainActivity
@@ -11,11 +11,22 @@ import com.blackjack.ru_okay.databinding.ActivityWeeklyMoodSummaryBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.blackjack.ru_okay.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 class WeeklyMoodSummaryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWeeklyMoodSummaryBinding
     private lateinit var database: DatabaseReference
-    private val dayMoodMap = mutableMapOf<String, Map<String, List<String>>>()
+    private val dayMoodMap = mutableMapOf<String, Map<String, Any>>()
+
+    // Mapping of emotions to icons
+    private val emotionIconMap = mapOf(
+        "Very Good" to R.drawable.smiling,
+        "Good" to R.drawable.blushing,
+        "Neutral" to R.drawable.neutral,
+        "Bad" to R.drawable.sad,
+        "Very Bad" to R.drawable.disappointed
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,35 +37,38 @@ class WeeklyMoodSummaryActivity : AppCompatActivity() {
         database = FirebaseDatabase.getInstance().reference
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-        val days = arrayOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-        val moodIcons = arrayOf(
-            R.drawable.smiling, R.drawable.blushing, R.drawable.neutral,
-            R.drawable.sad, R.drawable.smiling, R.drawable.sad, R.drawable.smiling
-        )
+        // Initialize the past seven days
+        val pastWeek = getPastWeek()
 
-        for ((index, day) in days.withIndex()) {
+        // Add TextViews for each day to the grid and set click listeners
+        for (day in pastWeek) {
             val textView = TextView(this)
-            textView.text = day
-            textView.setCompoundDrawablesWithIntrinsicBounds(0, moodIcons[index], 0, 0)
+            textView.text = day.split("-")[0] // Display only the day name
+            textView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.neutral, 0, 0) // Default icon
             textView.setOnClickListener { displayMoodDetails(day) }
             binding.weeklyMoodGrid.addView(textView)
-        }
 
-        // Fetch mood data from Firebase
-        userId?.let {
-            database.child("users").child(it).child("moods").addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val moodMap = snapshot.getValue(object : GenericTypeIndicator<Map<String, Map<String, List<String>>>>() {})
-                    if (moodMap != null) {
-                        dayMoodMap.putAll(moodMap)
-                        displayMoodDetails("Sun") // Display the most recent day by default
+            // Fetch mood data from Firebase for each day of the past week
+            userId?.let { uid ->
+                database.child("users").child(uid).child("moods").child(day).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val moodMap = snapshot.value as? Map<String, Any>
+                        if (moodMap != null) {
+                            dayMoodMap[day] = moodMap
+                            val mood = moodMap["mood"] as? String
+                            mood?.let {
+                                textView.setCompoundDrawablesWithIntrinsicBounds(0, emotionIconMap[mood] ?: R.drawable.neutral, 0, 0)
+                            }
+                        } else {
+                            textView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.neutral, 0, 0)
+                        }
                     }
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    // Handle error
-                }
-            })
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle error
+                    }
+                })
+            }
         }
     }
 
@@ -71,23 +85,69 @@ class WeeklyMoodSummaryActivity : AppCompatActivity() {
     }
 
     private fun displayMoodDetails(day: String) {
-        val mood = dayMoodMap[day] ?: mapOf("positive" to listOf("Very Bad"), "negative" to emptyList(), "factor" to emptyList())
-        binding.selectedDayText.text = day
-        binding.selectedMoodText.text = mood["positive"]?.joinToString(", ") ?: "Very Bad"
+        val moodData = dayMoodMap[day] ?: mapOf("mood" to "Neutral", "positive" to emptyList<String>(), "negative" to emptyList<String>(), "factor" to emptyList<String>())
+        val dayDate = SimpleDateFormat("EEE-yyyy-MM-dd", Locale.getDefault()).parse(day)
+        binding.selectedDayText.text = SimpleDateFormat("EEEE, MMMM dd yyyy", Locale.getDefault()).format(dayDate)
 
+        val mood = moodData["mood"] as? String
+        binding.selectedMoodText.text = mood ?: "Neutral"
+
+        // Set mood icon
+        val moodIconRes = emotionIconMap[mood] ?: R.drawable.neutral
+        binding.selectedMoodIcon.setImageResource(moodIconRes)
+
+        // Display combined emotions
         binding.emotionLayout.removeAllViews()
-        val emotions = mood["negative"] ?: listOf("None")
-        for (emotion in emotions) {
+        val positiveEmotions = moodData["positive"] as? List<String> ?: emptyList()
+        val negativeEmotions = moodData["negative"] as? List<String> ?: emptyList()
+        val combinedEmotions = positiveEmotions + negativeEmotions
+
+        for (emotion in combinedEmotions) {
             val textView = TextView(this)
             textView.text = emotion
-            textView.setBackgroundResource(R.color.primary_500)
+            textView.setBackgroundResource(R.drawable.buttonborder)
+            textView.setPadding(8, 4, 8, 4)
+            textView.setTextColor(resources.getColor(R.color.primary_500, null))
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.setMargins(4, 4, 4, 4)
+            textView.layoutParams = layoutParams
             binding.emotionLayout.addView(textView)
         }
 
-        binding.factorText.text = mood["factor"]?.joinToString(", ") ?: "None"
+        // Display factors
+        binding.factorLayout.removeAllViews()
+        val factors = moodData["factor"] as? List<String> ?: emptyList()
 
-        // Set recommendations based on mood
-        binding.journalImage1.setImageResource(R.drawable.ic_journal)
-        binding.journalImage2.setImageResource(R.drawable.ic_journal)
+        for (factor in factors) {
+            val textView = TextView(this)
+            textView.text = factor
+            textView.setBackgroundResource(R.drawable.buttonborder)
+            textView.setPadding(8, 4, 8, 4)
+            textView.setTextColor(resources.getColor(R.color.primary_500, null))
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.setMargins(4, 4, 4, 4)
+            textView.layoutParams = layoutParams
+            binding.factorLayout.addView(textView)
+        }
+    }
+
+    private fun getPastWeek(): List<String> {
+        val dateFormat = SimpleDateFormat("EEE-yyyy-MM-dd", Locale.getDefault())
+        val calendar = Calendar.getInstance()
+        val pastWeek = mutableListOf<String>()
+
+        // Get today and the past six days
+        for (i in 0..6) {
+            pastWeek.add(dateFormat.format(calendar.time))
+            calendar.add(Calendar.DAY_OF_MONTH, -1)
+        }
+
+        return pastWeek
     }
 }

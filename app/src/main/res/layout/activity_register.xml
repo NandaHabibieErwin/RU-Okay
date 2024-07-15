@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".auth.LoginActivity">
+    tools:context=".auth.RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -106,6 +106,27 @@
             android:textColorHint="@color/neutral_500"
             android:inputType="date" />
 
+        <RadioGroup
+            android:id="@+id/userTypeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <RadioButton
+                android:id="@+id/radioUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/radioPsychologist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Psychologist" />
+        </RadioGroup>
+
         <Button
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"
@@ -114,7 +135,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/buttonsolid"
-            android:text="@string/sign_in"
+            android:text="Register"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 

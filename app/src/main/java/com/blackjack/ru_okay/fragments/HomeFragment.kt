@@ -1,19 +1,20 @@
 package com.blackjack.ru_okay.fragments
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.blackjack.ru_okay.R
 import com.blackjack.ru_okay.databinding.FragmentHomeBinding
+import com.blackjack.ru_okay.moodtracker.EmotionSelectionActivity
+import com.blackjack.ru_okay.moodtracker.WeeklyMoodSummaryActivity
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import android.content.Intent
-import com.blackjack.ru_okay.moodtracker.EmotionSelectionActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -74,6 +75,11 @@ class HomeFragment : Fragment() {
         // Check if user has already checked mood today
         checkMoodStatus(userId)
 
+        // Set up click listener for mood summary card
+        binding.moodSummaryCardView.setOnClickListener {
+            openWeeklyMoodSummaryActivity()
+        }
+
         return view
     }
 
@@ -126,7 +132,23 @@ class HomeFragment : Fragment() {
     private fun openEmotionSelectionActivity(emotion: String) {
         val intent = Intent(context, EmotionSelectionActivity::class.java)
         intent.putExtra("selectedEmotion", emotion)
-        startActivity(intent)
+
+        // Store the initial mood selection in the database
+        val userId = arguments?.getString(ARG_USER_ID)
+        userId?.let {
+            val dayOfWeek = SimpleDateFormat("EEE", Locale.ENGLISH).format(Date())
+            val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            val moodKey = "$dayOfWeek-$currentDate"
+
+            database.child("users").child(it).child("moods").child(moodKey).child("mood").setValue(emotion)
+                .addOnSuccessListener {
+                    // Navigate to EmotionSelectionActivity only after storing the initial mood
+                    startActivity(intent)
+                }
+                .addOnFailureListener {
+                    // Handle failure
+                }
+        }
     }
 
     private fun checkMoodStatus(userId: String?) {
@@ -135,12 +157,13 @@ class HomeFragment : Fragment() {
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             val moodKey = "$dayOfWeek-$currentDate"
 
-            database.child("users").child(it).child("moods").child(moodKey).addListenerForSingleValueEvent(object : ValueEventListener {
+            // Set up a ValueEventListener for real-time updates
+            database.child("users").child(it).child("moods").child(moodKey).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (!isAdded || _binding == null) return
                     if (snapshot.exists()) {
-                        val mood = snapshot.child("positive").getValue(object : GenericTypeIndicator<List<String>>() {})
-                        val emotions = snapshot.child("negative").getValue(object : GenericTypeIndicator<List<String>>() {})
+                        val mood = snapshot.child("mood").getValue(String::class.java)
+                        val emotions = snapshot.child("positive").getValue(object : GenericTypeIndicator<List<String>>() {})
                         val factors = snapshot.child("factor").getValue(object : GenericTypeIndicator<List<String>>() {})
                         updateMoodSummary(mood, emotions, factors)
                     } else {
@@ -159,13 +182,13 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun updateMoodSummary(mood: List<String>?, emotions: List<String>?, factors: List<String>?) {
+    private fun updateMoodSummary(mood: String?, emotions: List<String>?, factors: List<String>?) {
         binding.moodSelectionCardView.visibility = View.GONE
         binding.moodSummaryCardView.visibility = View.VISIBLE
-        binding.moodStatusSummary.text = mood?.joinToString(", ") ?: "No Mood"
+        binding.moodStatusSummary.text = mood ?: "No Mood"
         binding.emotionTextSummary.text = "Emotions: ${emotions?.joinToString(", ") ?: "None"}"
 
-        val moodIconRes = when (mood?.firstOrNull()) {
+        val moodIconRes = when (mood) {
             "Very Good" -> R.drawable.smiling
             "Good" -> R.drawable.blushing
             "Neutral" -> R.drawable.neutral
@@ -179,6 +202,11 @@ class HomeFragment : Fragment() {
     private fun showMoodSelection() {
         binding.moodSelectionCardView.visibility = View.VISIBLE
         binding.moodSummaryCardView.visibility = View.GONE
+    }
+
+    private fun openWeeklyMoodSummaryActivity() {
+        val intent = Intent(context, WeeklyMoodSummaryActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onDestroyView() {

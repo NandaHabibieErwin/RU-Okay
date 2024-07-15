@@ -28,6 +28,7 @@ navigationFragmentKtxVersion = "2.7.7"
 firebaseVertexai = "16.0.0-beta02"
 billing = "1.0.0-alpha10"
 videouikitAndroid = "4.0.1"
+firebaseMessaging = "24.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +58,7 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 firebase-vertexai = { group = "com.google.firebase", name = "firebase-vertexai", version.ref = "firebaseVertexai" }
 billing = { group = "com.google.androidbrowserhelper", name = "billing", version.ref = "billing" }
 videoUIKit-android = { module = "com.github.AgoraIO-Community:VideoUIKit-Android", version.ref = "videouikitAndroid" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 
 
 [plugins]

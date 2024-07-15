@@ -9,7 +9,7 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.blackjack.ru_okay.R
-import com.blackjack.ru_okay.databinding.ActivityProfileBinding
+import com.blackjack.ru_okay.databinding.ActivityPsychologistProfileBinding
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -19,9 +19,9 @@ import com.sendbird.android.params.UserUpdateParams
 import com.sendbird.uikit.SendbirdUIKit
 import java.io.IOException
 
-class ProfileActivity : AppCompatActivity() {
+class PsychologistProfileActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityProfileBinding
+    private lateinit var binding: ActivityPsychologistProfileBinding
 
     private val PICK_IMAGE_REQUEST = 1
     private lateinit var storage: FirebaseStorage
@@ -29,16 +29,16 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProfileBinding.inflate(layoutInflater)
+        binding = ActivityPsychologistProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         storage = FirebaseStorage.getInstance()
         database = FirebaseDatabase.getInstance("https://ru-okaydemo-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
 
         binding.changeAvatarButton.setOnClickListener { openFileChooser() }
-        binding.saveButton.setOnClickListener { saveUserProfile() }
+        binding.saveButton.setOnClickListener { savePsychologistProfile() }
 
-        loadUserProfile()
+        loadPsychologistProfile()
     }
 
     private fun openFileChooser() {
@@ -68,8 +68,8 @@ class ProfileActivity : AppCompatActivity() {
         storageReference.putFile(imageUri)
             .addOnSuccessListener {
                 storageReference.downloadUrl.addOnSuccessListener { uri ->
-                    // Update the user's profile with the new avatar URL
-                    database.child("users").child(userId).child("profile").child("avatarUrl").setValue(uri.toString())
+                    // Update the psychologist's profile with the new avatar URL
+                    database.child("psychologists").child(userId).child("avatarUrl").setValue(uri.toString())
                 }
             }
             .addOnFailureListener {
@@ -77,22 +77,22 @@ class ProfileActivity : AppCompatActivity() {
             }
     }
 
-    private fun saveUserProfile() {
+    private fun savePsychologistProfile() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val gender = if (binding.maleRadioButton.isChecked) "Male" else "Female"
-        val userProfile = mapOf(
+        val psychologistProfile = mapOf(
             "username" to binding.usernameEditText.text.toString(),
             "realName" to binding.realNameEditText.text.toString(),
-            "age" to binding.ageEditText.text.toString(),
+            "specialization" to binding.specializationEditText.text.toString(),
+            "experience" to binding.experienceEditText.text.toString(),
             "location" to binding.locationEditText.text.toString(),
             "gender" to gender,
             "aboutMe" to binding.aboutMeEditText.text.toString(),
-            "hobbies" to binding.hobbiesEditText.text.toString(),
             "phoneNumber" to binding.phoneNumberEditText.text.toString()
         )
-        database.child("users").child(userId).child("profile").setValue(userProfile)
+        database.child("psychologists").child(userId).child("profile").setValue(psychologistProfile)
             .addOnSuccessListener {
-                val username = userProfile["username"].toString()
+                val username = psychologistProfile["username"].toString()
                 val params = UserUpdateParams()
                 params.nickname = username
 
@@ -105,20 +105,21 @@ class ProfileActivity : AppCompatActivity() {
                         finish()
                     }
                 })
-                 // Navigate back to the previous activity
+                // Navigate back to the previous activity
             }
             .addOnFailureListener {
                 // Failed to save profile
             }
     }
 
-    private fun loadUserProfile() {
+    private fun loadPsychologistProfile() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        database.child("users").child(userId).child("profile").addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("psychologists").child(userId).child("profile").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 binding.usernameEditText.setText(snapshot.child("username").value as? String)
                 binding.realNameEditText.setText(snapshot.child("realName").value as? String)
-                binding.ageEditText.setText(snapshot.child("age").value as? String)
+                binding.specializationEditText.setText(snapshot.child("specialization").value as? String)
+                binding.experienceEditText.setText(snapshot.child("experience").value as? String)
                 binding.locationEditText.setText(snapshot.child("location").value as? String)
                 val gender = snapshot.child("gender").value as? String
                 if (gender == "Male") {
@@ -127,11 +128,10 @@ class ProfileActivity : AppCompatActivity() {
                     binding.femaleRadioButton.isChecked = true
                 }
                 binding.aboutMeEditText.setText(snapshot.child("aboutMe").value as? String)
-                binding.hobbiesEditText.setText(snapshot.child("hobbies").value as? String)
                 binding.phoneNumberEditText.setText(snapshot.child("phoneNumber").value as? String)
                 val avatarUrl = snapshot.child("avatarUrl").value as? String
                 avatarUrl?.let {
-                    Glide.with(this@ProfileActivity)
+                    Glide.with(this@PsychologistProfileActivity)
                         .load(it)
                         .placeholder(R.drawable.ic_user_temporary)
                         .into(binding.avatarImageView)
