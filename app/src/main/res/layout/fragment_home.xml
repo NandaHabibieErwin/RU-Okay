@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.HomeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,17 +12,19 @@
         android:orientation="vertical"
         android:padding="10dp">
 
+        <!-- Mood Selection View -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/moodSelectionCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            >
+            android:layout_margin="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:background="@drawable/buttonsolid">
+                android:background="@drawable/buttonsolid"
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -61,143 +64,232 @@
                         android:text="How's your day?"
                         android:textSize="16sp"
                         android:textColor="@android:color/white" />
+                </RelativeLayout>
 
-                    <!-- Mood Icons and Labels -->
+                <!-- Mood Icons and Labels -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/user_profile_picture"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center">
+
+                    <!-- Very Good -->
+                    <LinearLayout
+                        android:layout_width="62dp"
+                        android:layout_height="67dp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/very_good"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/buttonsolid"
+                            android:backgroundTint="@color/white"
+                            android:src="@drawable/smiling"
+                            android:textColor="@color/primary_500"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Very Good"
+                            android:textSize="12sp"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <!-- Good -->
+                    <LinearLayout
+                        android:layout_width="62dp"
+                        android:layout_height="67dp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/good"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/buttonsolid"
+                            android:backgroundTint="@color/white"
+                            android:src="@drawable/blushing"
+                            android:textColor="@color/primary_500" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Good"
+                            android:textSize="12sp"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <!-- Neutral -->
+                    <LinearLayout
+                        android:layout_width="62dp"
+                        android:layout_height="67dp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/neutral"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/buttonsolid"
+                            android:backgroundTint="@color/white"
+                            android:src="@drawable/neutral"
+                            android:textColor="@color/primary_500"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Neutral"
+                            android:textSize="12sp"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <!-- Bad -->
+                    <LinearLayout
+                        android:layout_width="62dp"
+                        android:layout_height="67dp"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/bad"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/buttonsolid"
+                            android:backgroundTint="@color/white"
+                            android:src="@drawable/sad"
+                            android:textColor="@color/primary_500"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bad"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <!-- Very Bad -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/very_bad"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/buttonsolid"
+                            android:backgroundTint="@color/white"
+                            android:src="@drawable/disappointed"
+                            android:textColor="@color/primary_500"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Very Bad"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Mood Summary View -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/moodSummaryCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@drawable/buttonsolid"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- User Profile Picture -->
+                    <ImageView
+                        android:id="@+id/user_profile_picture_summary"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:src="@drawable/ic_user_temporary"
+                        android:scaleType="centerCrop"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/buttonborder"
+                        android:padding="2dp" />
+
+                    <!-- Greeting Text -->
+                    <TextView
+                        android:id="@+id/greeting_text_summary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/user_profile_picture_summary"
+                        android:text="Hello, Bagas!"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="4dp" />
+
+                    <!-- Sub Greeting Text -->
+                    <TextView
+                        android:id="@+id/sub_greeting_text_summary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/greeting_text_summary"
+                        android:layout_toEndOf="@id/user_profile_picture_summary"
+                        android:text="How's your day?"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/white" />
+
+                    <!-- Mood Summary -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_below="@id/user_profile_picture"
+                        android:layout_below="@id/user_profile_picture_summary"
                         android:layout_marginTop="16dp"
                         android:gravity="center">
 
-                        <!-- Very Good -->
-                        <LinearLayout
-                            android:layout_width="62dp"
-                            android:layout_height="67dp"
-                            android:orientation="vertical"
-                            android:gravity="center">
+                        <ImageView
+                            android:id="@+id/moodIconSummary"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/sad" />
 
-                            <ImageButton
-                                android:id="@+id/very_good"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:background="@drawable/buttonsolid"
-                                android:backgroundTint="@color/white"
-                                android:src="@drawable/smiling"
-
-                                android:textColor="@color/primary_500"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Very Good"
-                                android:textSize="12sp"
-                                android:textColor="@android:color/white" />
-                        </LinearLayout>
-
-                        <!-- Good -->
-                        <LinearLayout
-                            android:layout_width="62dp"
-                            android:layout_height="67dp"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            >
-
-                            <ImageButton
-                                android:id="@+id/good"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:background="@drawable/buttonsolid"
-                                android:backgroundTint="@color/white"
-                                android:src="@drawable/blushing"
-
-                                android:textColor="@color/primary_500" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Good"
-                                android:textSize="12sp"
-                                android:textColor="@android:color/white" />
-                        </LinearLayout>
-
-                        <!-- Neutral -->
-                        <LinearLayout
-                            android:layout_width="62dp"
-                            android:layout_height="67dp"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/neutral"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:background="@drawable/buttonsolid"
-                                android:backgroundTint="@color/white"
-                                android:src="@drawable/neutral"
-
-                                android:textColor="@color/primary_500"
-                                 />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Neutral"
-                                android:textSize="12sp"
-                                android:textColor="@android:color/white" />
-                        </LinearLayout>
-
-                        <!-- Bad -->
-                        <LinearLayout
-                            android:layout_width="62dp"
-                            android:layout_height="67dp"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/bad"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:background="@drawable/buttonsolid"
-                                android:backgroundTint="@color/white"
-                                android:src="@drawable/sad"
-
-                                android:textColor="@color/primary_500"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bad"
-                                android:textSize="14sp"
-                                android:textColor="@android:color/white" />
-                        </LinearLayout>
-
-                        <!-- Very Bad -->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/very_bad"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:background="@drawable/buttonsolid"
-                                android:backgroundTint="@color/white"
-                                android:src="@drawable/disappointed"
-
-                                android:textColor="@color/primary_500"
-                                android:textSize="16sp" />
+                            android:layout_marginStart="16dp">
 
                             <TextView
+                                android:id="@+id/moodStatusSummary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Very Bad"
-                                android:textSize="14sp"
-                                android:textColor="@android:color/white" />
+                                android:text="Bad"
+                                android:textSize="20sp"
+                                android:textColor="@android:color/black" />
+
+                            <TextView
+                                android:id="@+id/emotionTextSummary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Emotions: Angry, Stress, Worried..."
+                                android:textSize="16sp"
+                                android:textColor="@android:color/black" />
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
@@ -209,6 +301,7 @@
             android:layout_gravity="center">
 
             <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
 
@@ -220,22 +313,155 @@
                     android:inAnimation="@android:anim/slide_in_left"
                     android:outAnimation="@android:anim/slide_out_right">
 
-                    <!-- Add multiple views here to flip -->
-                    <TextView
+                    <!-- Content 1 -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="Content 1"
-                        android:textSize="24sp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@android:color/white"
+                        android:padding="16dp">
 
-                    <TextView
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@drawable/ic_chat_call"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="30dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Chat/Call"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="We will listen anywhere anytime"
+                                android:textSize="14sp"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Content 2 -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="Content 2"
-                        android:textSize="24sp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@android:color/white"
+                        android:padding="16dp">
 
-                    <!-- Add more content views as needed -->
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_face"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Face 2 Face"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Consult with a professional directly"
+                                android:textSize="14sp"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Content 3 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@android:color/white"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_family_counseling"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Family Counseling"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Consult with your family"
+                                android:textSize="14sp"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Content 4 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@android:color/white"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_counseling_bundling"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Counseling Bundling"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Save your money by making several schedules"
+                                android:textSize="14sp"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </ViewFlipper>
 
                 <ImageButton
@@ -258,6 +484,61 @@
                     android:src="@android:drawable/ic_media_previous"
                     android:contentDescription="Previous" />
 
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:cardElevation="4dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white">
+
+                <ImageView
+                    android:id="@+id/discount_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_discount" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:background="#43a047"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="160dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SPECIAL DISCOUNT"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rp.100.000"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="For Your Counselling"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

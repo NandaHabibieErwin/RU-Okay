@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PsychologistActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Psychologist Profile Section -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@drawable/buttonsolid">
+
+            <ImageView
+                android:id="@+id/psychologist_profile_picture"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_user_temporary"
+                android:scaleType="centerCrop"
+                android:background="@drawable/buttonborder"
+                android:padding="2dp" />
+
+            <TextView
+                android:id="@+id/psychologist_greeting_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/psychologist_profile_picture"
+                android:layout_marginStart="16dp"
+                android:text="Hello, [Psychologist Name]"
+                android:textSize="20sp"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/psychologist_specialty_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/psychologist_greeting_text"
+                android:layout_toEndOf="@id/psychologist_profile_picture"
+                android:layout_marginStart="16dp"
+                android:text="[Specialty]"
+                android:textSize="16sp"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
+
+        <!-- Consultation Requests Section -->
+        <TextView
+            android:id="@+id/consultation_requests_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Consultation Requests"
+            android:textSize="18sp"
+            android:textColor="@android:color/black" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewConsultations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <!-- Button to Join Call -->
+        <Button
+            android:id="@+id/joinCallButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Join Call"
+            android:visibility="gone"
+            android:onClick="onJoinCallButtonClick" />
+    </LinearLayout>
+</ScrollView>
