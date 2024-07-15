@@ -25,7 +25,7 @@ class VideoCallActivity : AppCompatActivity() {
     private val channelName = "Consult"
 
     // Fill the temp token generated on Agora Console.
-    private val token = "007eJxTYHgS657Hk2z99FnBxGxf9bc6Ch0Xl2o+WKuSYSHPmHU49p4Cg1maebKJeXJammFKoomRkUWSaXKykYW5ebKBuVlyWrJFye3JaQ2BjAyWBz4yMEIhiM/O4JyfV1yaU8LAAACAxCC9"
+    private val token = "007eJxTYJhmkyXstOf3tNWW8qvK985MOHAzYHaM3BczVRG+zrMzX99RYDBLM082MU9OSzNMSTQxMrJIMk1ONrIwN082MDdLTku2aDOemtYQyMjw9IAAIyMDBIL47AzO+XnFpTklDAwA0GMhTg=="
 
     private val PERMISSION_REQ_ID = 22
     private val REQUESTED_PERMISSIONS = arrayOf(

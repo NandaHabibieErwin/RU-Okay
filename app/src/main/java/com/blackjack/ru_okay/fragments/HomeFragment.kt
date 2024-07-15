@@ -163,8 +163,12 @@ class HomeFragment : Fragment() {
                     if (!isAdded || _binding == null) return
                     if (snapshot.exists()) {
                         val mood = snapshot.child("mood").getValue(String::class.java)
-                        val emotions = snapshot.child("positive").getValue(object : GenericTypeIndicator<List<String>>() {})
+                        val positive_emotions = snapshot.child("positive").getValue(object : GenericTypeIndicator<List<String>>() {})
+                        val negative_emotions = snapshot.child("negative").getValue(object : GenericTypeIndicator<List<String>>() {})
                         val factors = snapshot.child("factor").getValue(object : GenericTypeIndicator<List<String>>() {})
+                        val emotions = mutableListOf<String>()
+                        positive_emotions?.let { emotions.addAll(it) }
+                        negative_emotions?.let { emotions.addAll(it) }
                         updateMoodSummary(mood, emotions, factors)
                     } else {
                         showMoodSelection()
@@ -186,7 +190,12 @@ class HomeFragment : Fragment() {
         binding.moodSelectionCardView.visibility = View.GONE
         binding.moodSummaryCardView.visibility = View.VISIBLE
         binding.moodStatusSummary.text = mood ?: "No Mood"
-        binding.emotionTextSummary.text = "Emotions: ${emotions?.joinToString(", ") ?: "None"}"
+        val maxLength = 15 // Define the maximum length you want
+        val emotionsText = emotions?.joinToString(", ")?.let {
+            if (it.length > maxLength) it.take(maxLength - 3) + "..." else it
+        } ?: "None"
+
+        binding.emotionTextSummary.text = "Emotions: $emotionsText"
 
         val moodIconRes = when (mood) {
             "Very Good" -> R.drawable.smiling

@@ -1,5 +1,6 @@
 package com.blackjack.ru_okay.fragments
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.blackjack.ru_okay.journal.JournalInfoActivity
 import com.blackjack.ru_okay.R
@@ -55,7 +57,7 @@ class JournalFragment : Fragment() {
                     binding.journalHistory.removeAllViews()
                     for (journalSnapshot in snapshot.children) {
                         val journal = journalSnapshot.getValue(JournalEntry::class.java)
-                        journal?.let { addJournalEntryView(it) }
+                        journal?.let { addJournalEntryView(it, journalSnapshot.key!!) }
                     }
                 }
             }
@@ -66,7 +68,7 @@ class JournalFragment : Fragment() {
         })
     }
 
-    private fun addJournalEntryView(journal: JournalEntry) {
+    private fun addJournalEntryView(journal: JournalEntry, journalId: String) {
         // Check if the fragment view is still valid
         if (_binding != null) {
             val journalView = LayoutInflater.from(context).inflate(R.layout.journal_entry_item, binding.journalHistory, false)
@@ -79,19 +81,52 @@ class JournalFragment : Fragment() {
             val date = Date(journal.timestamp)
             val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             val dateFormat = SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault())
-
+            titleTextView.text = "Daily Journal"
             timeTextView.text = "Written at ${timeFormat.format(date)}"
             dateTextView.text = dateFormat.format(date)
 
             journalView.setOnClickListener {
                 val intent = Intent(activity, WriteJournalActivity::class.java).apply {
-                    putExtra("content", journal.text.toString()) // Assuming 'journal.content' holds the content
+                    putExtra("journalId", journalId)
+                    putExtra("content", journal.text)
                 }
                 startActivity(intent)
             }
 
+            journalView.setOnLongClickListener {
+                showDeleteConfirmationDialog(journalId)
+                true
+            }
+
             binding.journalHistory.addView(journalView)
         }
+    }
+
+    private fun showDeleteConfirmationDialog(journalId: String) {
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+        dialogBuilder.setMessage("Are you sure you want to delete this journal entry?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { _, _ ->
+                deleteJournalEntry(journalId)
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+        val alert = dialogBuilder.create()
+        alert.show()
+    }
+
+    private fun deleteJournalEntry(journalId: String) {
+        val currentUser = auth.currentUser
+        val userID = currentUser?.uid ?: return
+
+        database.child("users").child(userID).child("journals").child(journalId).removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(activity, "Journal entry deleted", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(activity, "Failed to delete journal entry", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onDestroyView() {

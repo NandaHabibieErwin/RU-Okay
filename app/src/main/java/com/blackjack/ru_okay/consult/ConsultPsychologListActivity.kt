@@ -87,7 +87,7 @@ class ConsultPsychologListActivity : AppCompatActivity() {
                     val id = dataSnapshot.key ?: ""
                     val profile = dataSnapshot.child("profile")
                     val name = profile.child("username").getValue(String::class.java) ?: ""
-                    val specialty = "Specialty info not available" // Add actual field if available
+                    val specialty = profile.child("specialization").getValue(String::class.java) ?: "Specialty info not available"
                     val imageUrl = "Image URL not available" // Add actual field if available
                     val rating = 0.0f // Add actual field if available
                     val psychologist = Psychologist(id, name, specialty, imageUrl, rating)

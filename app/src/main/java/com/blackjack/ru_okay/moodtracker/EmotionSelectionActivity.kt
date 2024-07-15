@@ -68,7 +68,7 @@ class EmotionSelectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEmotionSelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         database = FirebaseDatabase.getInstance().reference
         val userId = FirebaseAuth.getInstance().currentUser?.uid

@@ -4,18 +4,29 @@
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/primary_500</item>
         <item name="buttonTint">@color/primary_500</item>
+        <item name="android:fontFamily">@font/dm_sans</item>
+    </style>
+
+    <style name="Bases.Theme.RUOkay" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/primary_500</item>
+        <item name="buttonTint">@color/primary_500</item>
+        <item name="android:fontFamily">@font/dm_sans</item>
     </style>
 
     <!-- Application theme -->
-    <style name="Theme.RUOkay" parent="Base.Theme.RUOkay" />
-
+    <style name="Theme.RUOkay" parent="Base.Theme.RUOkay">
+        <item name="android:fontFamily">@font/dm_sans</item>
+    </style>
     <style name="BottomNavigationViewTextActive" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/active</item>
+        <item name="android:fontFamily">@font/dm_sans</item>
     </style>
 
     <style name="BottomNavigationViewTextInactive" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/inactive</item>
+        <item name="android:fontFamily">@font/dm_sans</item>
     </style>
 </resources>

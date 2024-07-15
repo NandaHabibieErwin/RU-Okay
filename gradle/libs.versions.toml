@@ -29,6 +29,8 @@ firebaseVertexai = "16.0.0-beta02"
 billing = "1.0.0-alpha10"
 videouikitAndroid = "4.0.1"
 firebaseMessaging = "24.0.0"
+googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
+playServicesMaps = "18.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -59,11 +61,13 @@ firebase-vertexai = { group = "com.google.firebase", name = "firebase-vertexai",
 billing = { group = "com.google.androidbrowserhelper", name = "billing", version.ref = "billing" }
 videoUIKit-android = { module = "com.github.AgoraIO-Community:VideoUIKit-Android", version.ref = "videouikitAndroid" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+googleAndroidLibrariesMapsplatformSecretsGradlePlugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "googleAndroidLibrariesMapsplatformSecretsGradlePlugin" }
 
 [bundles]
 koin = ["koin-core", "koin-android", "koin-androidx-compose"]

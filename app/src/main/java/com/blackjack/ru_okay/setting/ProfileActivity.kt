@@ -7,7 +7,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.blackjack.ru_okay.MainActivity
 import com.blackjack.ru_okay.R
 import com.blackjack.ru_okay.databinding.ActivityProfileBinding
 import com.bumptech.glide.Glide
@@ -31,6 +33,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         storage = FirebaseStorage.getInstance()
         database = FirebaseDatabase.getInstance("https://ru-okaydemo-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
@@ -90,11 +93,16 @@ class ProfileActivity : AppCompatActivity() {
             "hobbies" to binding.hobbiesEditText.text.toString(),
             "phoneNumber" to binding.phoneNumberEditText.text.toString()
         )
-        database.child("users").child(userId).child("profile").setValue(userProfile)
+        database.child("users").child(userId).child("profile").updateChildren(userProfile)
             .addOnSuccessListener {
                 val username = userProfile["username"].toString()
                 val params = UserUpdateParams()
                 params.nickname = username
+                database.child("users").child(userId).child("profile").child("avatarUrl").get().addOnSuccessListener {
+                    val avatarUrl = it.value as? String
+                    params.profileImageUrl = avatarUrl
+                    Log.d("f", avatarUrl.toString())
+                }
 
                 SendbirdUIKit.updateUserInfo(params, CompletionHandler { e ->
                     if (e != null) {
@@ -110,6 +118,18 @@ class ProfileActivity : AppCompatActivity() {
             .addOnFailureListener {
                 // Failed to save profile
             }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun loadUserProfile() {

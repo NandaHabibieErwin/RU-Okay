@@ -1,5 +1,9 @@
 package com.blackjack.ru_okay
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -73,20 +77,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun retrieveUsernameAndInitializeSendbird(userID: String) {
-        database.child("users").child(userID).child("profile").child("username").addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("users").child(userID).child("profile").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val username = snapshot.value as? String ?: "default_username"
-                initSendbird(userID, username)
+                val username = snapshot.child("username").getValue(String::class.java) ?: "default_username"
+                val avatarUrl = snapshot.child("avatarUrl").getValue(String::class.java) ?: "default_avatar_url"
+                initSendbird(userID, username, avatarUrl)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("MainActivity", "Failed to retrieve username: ${error.message}")
-                initSendbird(userID, "default_username")
+                Log.e("MainActivity", "Failed to retrieve user data: ${error.message}")
+                initSendbird(userID, "default_username", "default_avatar_url")
             }
         })
     }
 
-    private fun initSendbird(userID: String, username: String) {
+
+    private fun initSendbird(userID: String, username: String, avatarUrl: String) {
         SendbirdUIKit.init(object : SendbirdUIKitAdapter {
             override fun getAppId(): String {
                 return "66356B2B-EEE4-4399-A78B-C38720145059" // Specify your Sendbird application ID.
@@ -107,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun getProfileUrl(): String {
-                        return ""
+                        return avatarUrl
                     }
                 }
             }
@@ -145,5 +151,18 @@ class MainActivity : AppCompatActivity() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
         transaction.commit()
+    }
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("consult_reminder_channel", name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

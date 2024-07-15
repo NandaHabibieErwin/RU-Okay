@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.blackjack.ru_okay.databinding.FragmentSettingBinding
+import com.blackjack.ru_okay.setting.SubscriptionActivity
 
 class SettingFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
@@ -86,6 +87,11 @@ class SettingFragment : Fragment() {
 
                 binding.userProfilePicture.setImageResource(R.drawable.ic_user_temporary)
             }
+        }
+
+        binding.btnSubscription.setOnClickListener {
+            val intent = Intent(activity, SubscriptionActivity::class.java)
+            startActivity(intent)
         }
 
         binding.editUserProfile.setOnClickListener {

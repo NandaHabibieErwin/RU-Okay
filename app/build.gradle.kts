@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
+    alias(libs.plugins.googleAndroidLibrariesMapsplatformSecretsGradlePlugin)
 }
 
 android {
@@ -57,11 +58,13 @@ dependencies {
     implementation ("com.github.AgoraIO-Community.VideoUIKit-Android:final:4.0.1")
     implementation ("io.agora.rtc:full-sdk:4.0.1")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation ("com.android.billingclient:billing:7.0.0")
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation(libs.firebase.vertexai)
     implementation(libs.billing)
     implementation(libs.firebase.messaging)
+    implementation(libs.play.services.maps)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.firebase.auth)
